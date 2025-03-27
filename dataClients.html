@@ -1,0 +1,37 @@
+
+<div class="container">
+  <div class="form-container">
+    <form id="clientForm">
+      <div class="label-container">الرقم الضريبي:</div>
+      <input type="text" id="taxNumber" onkeyup="searchClients('taxNumber')"><br>
+      <div class="label-container">إسم العميل:</div>
+      <input type="text" id="clientName" onkeyup="searchClients('clientName')"><br>
+      <div class="label-container">رقم المبنى:</div>
+      <input type="text" id="buildingNumber"><br>
+      <div class="label-container">الشارع:</div>
+      <input type="text" id="street"><br>
+      <div class="label-container">القسم:</div>
+      <input type="text" id="district"><br>
+      <div class="label-container">المحافظة:</div>
+      <input type="text" id="governorate"><br>
+      <div class="label-container">الدولة:</div>
+      <input type="text" id="country"><br>
+      <div class="label-container">خصم ضرائبي:</div>
+      <input type="checkbox" id="taxDiscount"><br>
+      <button type="button" id="submitBtn" onclick="submitClient()">Submit</button>
+      <button type="button" id="clearBtn" onclick="clearForm()">Clear</button>
+      <button type="button" id="deleteClientBtn" onclick="deleteClient()">Delete client</button>
+      <button type="button" id="clientFolderBtn" onclick="openClientFolder()">مستندات العميل</button>
+    </form>
+  </div>
+
+  <div id="clientList"></div>
+
+  <!-- أزرار جديدة -->
+  <button type="button" id="newPriceOfferBtn" onclick="showNewPriceOffer()">عرض أسعار جديد</button>
+  <button type="button" id="clientPriceOffersBtn" onclick="showClientPriceOffers()">عروض أسعار العميل</button>
+  <button type="button" id="newOperationOrderBtn" onclick="showNewOperationOrder()">أمر تشغيل جديد</button>
+  <button type="button" id="clientOperationOrdersBtn" onclick="showClientOperationOrders()">أوامر تشغيل العميل</button>
+  <button type="button" id="newInvoiceBtn" onclick="showNewInvoice()">فاتورة جديدة</button>
+  <button type="button" id="clientInvoicesBtn" onclick="showClientInvoices()">فواتير العميل</button>
+</div>

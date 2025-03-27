@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Williams Intelligent Designs</title>
+    <style>
+      /*
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border-left-color: #000;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+      }
+      */
+      .spinner {
+        border: 10px solid rgba(130, 194, 147, 0.799);
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        border-left-color: #000;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+      }
+
+      /* تأثير الدوران */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .spinner.hidden {
+        display: none;
+      }
+
+      .responsive-image {
+        width: 50%;
+        height: 50%;
+        max-width: 50%;
+        cursor: pointer;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        direction: rtl;
+      }
+
+      #uniqueDeviceId {
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #ddd;
+        cursor: text;
+        user-select: all;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #444;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .form-container {
+        width: 60%;
+        margin-bottom: 20px;
+      }
+
+      .label-container {
+        text-align: right;
+        margin-bottom: 5px;
+      }
+
+      input[type="text"],
+      input[type="checkbox"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: right;
+        background-color: #555;
+        color: #fff;
+      }
+
+      button {
+        padding: 12px 20px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      #submitBtn {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      #clearBtn {
+        background-color: #f44336;
+        color: white;
+      }
+
+      #deleteClientBtn {
+        background-color: #f44336;
+        color: white;
+      }
+
+      #clientFolderBtn {
+        background-color: #2196f3;
+        color: white;
+      }
+
+      #clientList {
+        width: 35%;
+        margin-top: 20px;
+        background-color: #444;
+        padding: 10px;
+        border-radius: 4px;
+        float: right;
+        text-align: right;
+      }
+
+      #clientList div {
+        padding: 8px;
+        margin-bottom: 5px;
+        background-color: #555;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .form-container,
+        #clientList {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="spinner hidden" id="loading-spinner"></div>
+
+    <div id="mainWindow">
+      <div id="uniqueDeviceId">
+        <img
+          src="https://imgur.com/ZrStpZC.jpg"
+          alt="Williams Intelligent Designs Logo"
+          class="responsive-image"
+          onclick="checkUniqueDeviceId()"
+        />
+      </div>
+
+      <div id="myClientData">
+        <div class="container">
+          <div class="form-container">
+            <form id="clientForm">
+
+              <div class="label-container">الرقم الضريبي:</div>
+              <input
+                type="text"
+                id="taxNumber"
+                onkeyup="searchClients('taxNumber')"
+              /><br />
+              <div class="label-container">إسم العميل:</div>
+              <input
+                type="text"
+                id="clientName"
+                onkeyup="searchClients('clientName')"
+              /><br />
+              <div class="label-container">رقم المبنى:</div>
+              <input type="text" id="buildingNumber" /><br />
+              <div class="label-container">الشارع:</div>
+              <input type="text" id="street" /><br />
+              <div class="label-container">القسم:</div>
+              <input type="text" id="district" /><br />
+              <div class="label-container">المحافظة:</div>
+              <input type="text" id="governorate" /><br />
+              <div class="label-container">الدولة:</div>
+              <input type="text" id="country" /><br />
+              <div class="label-container">خصم ضرائب:</div>
+              <input type="checkbox" id="taxDiscount" /><br />
+              <button type="button" id="submitBtn" onclick="submitClient()">
+                Submit
+              </button>
+              <button type="button" id="clearBtn" onclick="clearForm()">
+                Clear
+              </button>
+              <button
+                type="button"
+                id="deleteClientBtn"
+                onclick="deleteClient()"
+              >
+                Delete client
+              </button>
+              <button
+                type="button"
+                id="clientFolderBtn"
+                onclick="openClientFolder()"
+              >
+                مستندات العميل
+              </button>
+            </form>
+          </div>
+
+          <div id="clientList"></div>
+
+          <!-- أزرار جديدة -->
+          <button
+            type="button"
+            id="newPriceOfferBtn"
+            onclick="showNewPriceOffer()"
+          >
+            عرض أسعار جديد
+          </button>
+          <button
+            type="button"
+            id="clientPriceOffersBtn"
+            onclick="showClientPriceOffers()"
+          >
+            عروض أسعار العميل
+          </button>
+          <button
+            type="button"
+            id="newOperationOrderBtn"
+            onclick="showNewOperationOrder()"
+          >
+            أمر تشغيل جديد
+          </button>
+          <button
+            type="button"
+            id="clientOperationOrdersBtn"
+            onclick="showClientOperationOrders()"
+          >
+            أوامر تشغيل العميل
+          </button>
+          <button type="button" id="newInvoiceBtn" onclick="showNewInvoice()">
+            فاتورة جديدة
+          </button>
+          <button
+            type="button"
+            id="clientInvoicesBtn"
+            onclick="showClientInvoices()"
+          >
+            فواتير العميل
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+      var spinner = document.getElementById("loading-spinner");
+      toggleView("uniqueDeviceId");
+
+      // أوامر خاصة باللوجو
+      function generateUniqueId() {
+        var characters =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var id = "";
+        for (var i = 0; i < 20; i++) {
+          id += characters.charAt(
+            Math.floor(Math.random() * characters.length)
+          );
+        }
+        return id;
+      }
+
+      function checkUniqueDeviceId() {
+        spinner.classList.remove("hidden");
+        // التحقق من وجود قيمة في Local Storage
+        var uniqueDeviceId = localStorage.getItem("uniqueDeviceId");
+
+        if (!uniqueDeviceId) {
+          // إنشاء ID برمجي مكون من 20 خانة
+          uniqueDeviceId = generateUniqueId();
+
+          // كتابة القيمة في Local Storage
+          localStorage.setItem("uniqueDeviceId", uniqueDeviceId);
+
+          // عرض القيمة قابلة للنسخ
+          document.getElementById("uniqueDeviceId").innerText = uniqueDeviceId;
+
+          // نقل الـ value إلى clipboard عند النقر على الصندوق
+          document
+            .getElementById("uniqueDeviceId")
+            .addEventListener("click", function () {
+              navigator.clipboard.writeText(uniqueDeviceId).then(
+                function () {
+                  console.log("Value copied to clipboard");
+                },
+                function () {
+                  console.log("Failed to copy value to clipboard");
+                }
+              );
+            });
+        } else {
+          // البحث في Google Sheet عن قيمة uniqueDeviceId
+          google.script.run
+            .withSuccessHandler(function (response) {
+              if (response === "found") {
+                toggleView("myClientData");
+                //        loadPage("dataClients");
+
+                // document.getElementById("uniqueDeviceId").id = "dataClients";
+              } else {
+                document.getElementById("uniqueDeviceId").innerText =
+                  uniqueDeviceId;
+                // نقل الـ value إلى clipboard عند النقر على الصندوق
+                document
+                  .getElementById("uniqueDeviceId")
+                  .addEventListener("click", function () {
+                    navigator.clipboard.writeText(uniqueDeviceId).then(
+                      function () {
+                        console.log("Value copied to clipboard");
+                      },
+                      function () {
+                        console.log("Failed to copy value to clipboard");
+                      }
+                    );
+                  });
+              }
+            })
+            .searchUniqueDeviceId(uniqueDeviceId);
+        }
+      }
+      /*
+      function loadPage(page) {
+        var spinner = document.getElementById("loading-spinner");
+        spinner.classList.remove("hidden");
+        google.script.run
+          .withSuccessHandler(function (content) {
+            spinner.classList.add("hidden");
+            document.getElementById("uniqueDeviceId").innerHTML = content;
+          })
+          .getPageContent(page);
+      }
+*/
+
+      function toggleView(targetId) {
+        let sections = document.querySelectorAll("#mainWindow > div");
+        sections.forEach((div) => {
+          div.style.display = div.id === targetId ? "block" : "none";
+        });
+        spinner.classList.add("hidden");
+      }
+
+      /*
+
+      function toggleView(targetId) {
+        var spinner = document.getElementById("loading-spinner");
+        spinner.classList.remove("hidden"); // إظهار التحميل
+        setTimeout(() => {
+          let sections = document.querySelectorAll("#mainWindow > div");
+          sections.forEach((div) => {
+            div.style.display = div.id === targetId ? "block" : "none";
+          });
+          spinner.classList.add("hidden"); // إخفاء التحميل بعد التأخير
+        }, 500); // تأخير نصف ثانية قبل الإخفاء
+      }
+
+      */
+
+      // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      //  أوامر خاصة ببيانات العملاء
+      var clientId = null;
+      showButtonsBasedOnClientId();
+      function searchClients(field) {
+        var value = document.getElementById(field).value;
+        if (value.length > 0) {
+          google.script.run
+            .withSuccessHandler(function (clients) {
+              var list = document.getElementById("clientList");
+              list.innerHTML = "";
+
+              clients.forEach(function (client) {
+                var item = document.createElement("div");
+                item.textContent = client[field];
+                item.onclick = function () {
+                  fillForm(client);
+                };
+                list.appendChild(item);
+              });
+            })
+            .searchClients(value, field);
+        } else {
+          document.getElementById("clientList").innerHTML = "";
+        }
+      }
+
+      function showButtonsBasedOnClientId() {
+        if (clientId) {
+          document.getElementById("newPriceOfferBtn").style.display =
+            "inline-block";
+          document.getElementById("clientPriceOffersBtn").style.display =
+            "inline-block";
+          document.getElementById("newOperationOrderBtn").style.display =
+            "inline-block";
+          document.getElementById("clientOperationOrdersBtn").style.display =
+            "inline-block";
+          document.getElementById("newInvoiceBtn").style.display =
+            "inline-block";
+          document.getElementById("clientInvoicesBtn").style.display =
+            "inline-block";
+        } else {
+          document.getElementById("newPriceOfferBtn").style.display = "none";
+          document.getElementById("clientPriceOffersBtn").style.display =
+            "none";
+          document.getElementById("newOperationOrderBtn").style.display =
+            "none";
+          document.getElementById("clientOperationOrdersBtn").style.display =
+            "none";
+          document.getElementById("newInvoiceBtn").style.display = "none";
+          document.getElementById("clientInvoicesBtn").style.display = "none";
+        }
+      }
+
+      function fillForm(client) {
+        clientId = client.clientId;
+        document.getElementById("taxNumber").value = client.taxNumber;
+        document.getElementById("clientName").value = client.clientName;
+        document.getElementById("buildingNumber").value =
+          client.buildingBuilding;
+        document.getElementById("street").value = client.street;
+        document.getElementById("district").value = client.district;
+        document.getElementById("governorate").value = client.governorate;
+        document.getElementById("country").value = client.country;
+        document.getElementById("taxDiscount").checked = client.taxDiscount;
+        showButtonsBasedOnClientId();
+      }
+
+      function clearForm() {
+        clientId = null;
+        document.getElementById("clientForm").reset();
+        document.getElementById("clientList").innerHTML = "";
+        showButtonsBasedOnClientId();
+      }
+
+      function submitClient() {
+        if (
+          document.getElementById("clientName").value === "" ||
+          document.getElementById("country").value === ""
+        ) {
+          alert("يرجى ملء حقول اسم العميل والدولة.");
+          return;
+        }
+
+        var data = {
+          clientId: clientId,
+          taxNumber: document.getElementById("taxNumber").value,
+          clientName: document.getElementById("clientName").value,
+          buildingNumber: document.getElementById("buildingNumber").value,
+          street: document.getElementById("street").value,
+          district: document.getElementById("district").value,
+          governorate: document.getElementById("governorate").value,
+          country: document.getElementById("country").value,
+          taxDiscount: document.getElementById("taxDiscount").checked,
+        };
+
+        google.script.run
+          .withSuccessHandler(function (response) {
+            clientId = response;
+          })
+          .submitClient(data);
+
+        showButtonsBasedOnClientId();
+      }
+
+      function deleteClient() {
+        if (clientId !== null) {
+          // var taxNumber = document.getElementById("taxNumber").value;
+          if (confirm("هل أنت متأكد من حذف هذا العميل؟")) {
+            google.script.run.deleteClient(clientId);
+            clearForm();
+          }
+        }
+      }
+
+      function openClientFolder() {
+        if (clientId !== null) {
+          google.script.run
+            .withSuccessHandler(function (url) {
+              window.open(url);
+            })
+            .openClientFolder(clientId);
+        }
+      }
+    </script>
+  </body>
+</html>
